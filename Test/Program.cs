@@ -18,7 +18,7 @@ namespace Test
             component.password = "csharpsendertest";
             component.enableSsl = true;
             component.send(component.username, "andrey.svyatogorov@masterdata.ru", "test mess", "Text should be here, but it is test");
-
+            Console.WriteLine("good");
             Console.ReadKey();
         }
     }
