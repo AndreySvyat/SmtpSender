@@ -1,4 +1,4 @@
-﻿namespace SmtpSSL
+﻿namespace SmtpComponent
 {
     partial class MailMessage
     {
