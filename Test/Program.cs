@@ -1,6 +1,9 @@
-﻿using System;
+using System;
+using System.IO;
+using System.Net;
 using System.Security;
 using SmtpComponent;
+using OpenSpan.Controls;
 
 namespace Test
 {
@@ -10,17 +13,12 @@ namespace Test
         static (string, string)[] test { get; set; }
 
         static void Main(string[] args)
-        { 
-
-            SecureString sString; ;
-            unsafe
-            {
-                fixed (char* p = Console.ReadLine())
-                {
-                    sString = new SecureString(p, 10);
-                }
-            }
+        {
+            Console.WriteLine(Path.Combine(@"C:\testTemp","name"+".zip"));
+            Console.WriteLine(Path.GetDirectoryName(@"C:\testTemp\installdocker.sh"));
+            
             Console.ReadKey();
         }
+
     }
 }
