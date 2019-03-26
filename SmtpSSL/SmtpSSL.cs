@@ -26,7 +26,7 @@ namespace SmtpComponent
         //TODO use autentification tocken of encripted credentials
         private NetworkCredential creds { get; set; }
 
-        private MailMessage mail { get; set; }
+        private MailMessage mail = new MailMessage();
 
         [MemberVisibilityAttribute(MemberVisibilityLevel.DefaultOff)]
         public string username { get; set; }
@@ -83,13 +83,16 @@ namespace SmtpComponent
         public void send()
         {
             Connect();
+            //smtp.SendAsync(mail,new object());
             smtp.Send(mail);
+            
         }
 
         [MemberVisibilityAttribute(MemberVisibilityLevel.DefaultOff)]
         public void send(string from, string to, string subject, string body)
         {
             Connect();
+            //smtp.SendAsync(from, to, subject, body, new object());
             smtp.Send(from, to, subject, body);
         }
 
@@ -143,6 +146,12 @@ namespace SmtpComponent
 
         }
 
+        [MemberVisibilityAttribute(MemberVisibilityLevel.DefaultOff)]
+        public void setFrom(string name)
+        {
+            mail.From = new MailAddress(username, name);
+        }
+
         //TODO add body from file
 
         [MemberVisibilityAttribute(MemberVisibilityLevel.DefaultOff)]
@@ -166,7 +175,7 @@ namespace SmtpComponent
                     }
                 case FileAttributes.Directory:
                     {
-                        attachAllFilesInDir(path);
+                        attachFolderArchive(path);
                         break;
                     }
                 case FileAttributes.Device:
@@ -198,24 +207,15 @@ namespace SmtpComponent
             }
         }
 
-        private void attachAllFilesInDir(string path)
+        private string attachFolderArchive(string path)
         {
             string dirName = Path.GetFileName(path);
-            string archivePath = Path.Combine(path, dirName + ".zip");
-            ZipArchive attachments = ZipFile.Open(archivePath,ZipArchiveMode.Create);
+            string archivePath = Path.Combine(Path.GetTempPath(), dirName + ".zip");
 
-            fillArchive(path, attachments);
-
+            ZipFile.CreateFromDirectory(path, archivePath);
+            
             mail.Attachments.Add(new Attachment(archivePath));
-        }
-
-        private void fillArchive(string path, ZipArchive archive)
-        {
-            foreach (string file in Directory.GetFiles(path))
-            {
-                if (File.GetAttributes(file) == FileAttributes.Directory) { fillArchive(file, archive); }
-                archive.CreateEntryFromFile(file, Path.GetFileName(file));
-            }
+            return archivePath;
         }
     }
 }
