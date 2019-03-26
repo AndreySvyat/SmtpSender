@@ -217,6 +217,8 @@ namespace SmtpComponent
             mail.Attachments.Add(new Attachment(archivePath));
             return archivePath;
         }
+
+        //TODO remove temporary archives, handle all exceptions add logging
     }
 }
 
