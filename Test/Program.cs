@@ -25,10 +25,15 @@ namespace Test
             mail.port = 587;
             mail.host = "smtp.gmail.com";
             mail.username = "testcsharpsmtp@gmail.com";
-            mail.password = "passwordsmtp";
-
-            mail.send("testcsharpsmtp@gmail.com", "andrey.svyatogorov@gmail.com", "test", "some text for test message!");
-            //Console.WriteLine(File.GetAttributes(@"C:\testTemp") +"\n");
+            string pwdstr = "passwordsmtp";
+            unsafe
+            {
+                fixed (char* pwd = pwdstr)
+                {
+                    mail.password= new SecureString(pwd,pwdstr.Length);
+                }
+            }
+            mail.send("andreysvyatoy@gmail.com", "andrey.svyatogorov@gmail.com", "test", "some text for test message!");
 
             sendfullemail(mail);
             
@@ -42,7 +47,7 @@ namespace Test
             mail.addCC("andreysvyatoy@gmail.com");
             mail.addBcc("andrey.svyatogorov@masterdata.ru");
             mail.addAttachments(@"C:\testTemp\test.html", @"C:\testTemp");
-            mail.setFrom("andrey");
+            mail.displayName="andrey";
             mail.send();
         }
 

@@ -22,18 +22,49 @@ namespace SmtpComponent
             InitializeComponent();
         }
 
-        private SmtpClient smtp = new SmtpClient();
         //TODO use autentification tocken of encripted credentials
-        private NetworkCredential creds { get; set; }
-
+        private SmtpClient smtp = new SmtpClient(); 
+        private NetworkCredential creds = new NetworkCredential();
         private MailMessage mail = new MailMessage();
 
         [MemberVisibilityAttribute(MemberVisibilityLevel.DefaultOff)]
-        public string username { get; set; }
-
+        public string username
+        {
+            get
+            {
+                return creds.UserName;
+            }
+            set
+            {
+                creds.UserName = value;
+                mail.From = new MailAddress(value);
+            }
+        }
         [MemberVisibilityAttribute(MemberVisibilityLevel.DefaultOff)]
-        public string password { get; set; } //TODO use secure string for password
-
+        public string displayName
+        {
+            get
+            {
+                return mail.From.DisplayName;
+            }
+            set
+            {
+                mail.From = new MailAddress(username, value);
+            }
+        }
+        //TODO use secure string for password
+        [MemberVisibilityAttribute(MemberVisibilityLevel.DefaultOff)]
+        public System.Security.SecureString password
+        {
+            get
+            {
+                return creds.SecurePassword;
+            }
+            set
+            {
+                creds.SecurePassword = value;
+            }
+        } 
         [MemberVisibilityAttribute(MemberVisibilityLevel.DefaultOff)]
         public string host
         {
@@ -46,7 +77,6 @@ namespace SmtpComponent
                 smtp.Host = value;
             }
         }
-
         [MemberVisibilityAttribute(MemberVisibilityLevel.DefaultOff)]
         public int port
         {
@@ -59,7 +89,6 @@ namespace SmtpComponent
                 smtp.Port = value;
             }
         }
-
         [MemberVisibilityAttribute(MemberVisibilityLevel.DefaultOff)]
         public bool enableSsl
         {
@@ -73,83 +102,59 @@ namespace SmtpComponent
             }
         }
 
-        private void Connect()
-        {
-            creds = new NetworkCredential(password: password, userName: username);
-            smtp.Credentials = creds;
-        }
-
         [MemberVisibilityAttribute(MemberVisibilityLevel.DefaultOff)]
         public void send()
         {
-            Connect();
-            //smtp.SendAsync(mail,new object());
+            smtp.Credentials = creds;
             smtp.Send(mail);
-            
         }
-
         [MemberVisibilityAttribute(MemberVisibilityLevel.DefaultOff)]
         public void send(string from, string to, string subject, string body)
         {
-            Connect();
-            //smtp.SendAsync(from, to, subject, body, new object());
+            smtp.Credentials = creds;
             smtp.Send(from, to, subject, body);
         }
-
         [MemberVisibilityAttribute(MemberVisibilityLevel.DefaultOff)]
         public void addTo(string address)
         {
             mail.To.Add(address);
         }
-
         [MemberVisibilityAttribute(MemberVisibilityLevel.DefaultOff)]
         public void addTo(string name, string address)
         {
             mail.To.Add(new MailAddress(address, name));
         }
-
         [MemberVisibilityAttribute(MemberVisibilityLevel.DefaultOff)]
         public void addCC(string address)
         {
             mail.CC.Add(address);
         }
-
         [MemberVisibilityAttribute(MemberVisibilityLevel.DefaultOff)]
         public void addCC(string name, string address)
         {
             mail.CC.Add(new MailAddress(address, name));
         }
-
         [MemberVisibilityAttribute(MemberVisibilityLevel.DefaultOff)]
         public void addBcc(string address)
         {
             mail.Bcc.Add(address);
         }
-
         [MemberVisibilityAttribute(MemberVisibilityLevel.DefaultOff)]
         public void addBcc(string name, string address)
         {
             mail.Bcc.Add(new MailAddress(address, name));
         }
-
         [MemberVisibilityAttribute(MemberVisibilityLevel.DefaultOff)]
         public void addBody(string body)
         {
             mail.Body = body;
         }
-
         [MemberVisibilityAttribute(MemberVisibilityLevel.DefaultOff)]
         public void addBody(string body, bool isHtmlBody)
         {
             mail.IsBodyHtml = isHtmlBody;
             addBody(body);
 
-        }
-
-        [MemberVisibilityAttribute(MemberVisibilityLevel.DefaultOff)]
-        public void setFrom(string name)
-        {
-            mail.From = new MailAddress(username, name);
         }
 
         //TODO add body from file
@@ -189,7 +194,6 @@ namespace SmtpComponent
             }
 
         }
-
         [MemberVisibilityAttribute(MemberVisibilityLevel.DefaultOff)]
         public void addAttachments(params string[] paths)
         {
@@ -206,7 +210,6 @@ namespace SmtpComponent
                 //TODO add logging
             }
         }
-
         private string attachFolderArchive(string path)
         {
             string dirName = Path.GetFileName(path);
