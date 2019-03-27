@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Net;
@@ -26,6 +27,7 @@ namespace SmtpComponent
         private SmtpClient smtp = new SmtpClient(); 
         private NetworkCredential creds = new NetworkCredential();
         private MailMessage mail = new MailMessage();
+        private List<string> tempFiles = new List<string>();
 
         [MemberVisibilityAttribute(MemberVisibilityLevel.DefaultOff)]
         public string username
@@ -107,6 +109,8 @@ namespace SmtpComponent
         {
             smtp.Credentials = creds;
             smtp.Send(mail);
+            mail.Dispose();
+            removeTempFiles();
         }
         [MemberVisibilityAttribute(MemberVisibilityLevel.DefaultOff)]
         public void send(string from, string to, string subject, string body)
@@ -214,14 +218,19 @@ namespace SmtpComponent
         {
             string dirName = Path.GetFileName(path);
             string archivePath = Path.Combine(Path.GetTempPath(), dirName + ".zip");
+            tempFiles.Add(archivePath);
 
             ZipFile.CreateFromDirectory(path, archivePath);
             
             mail.Attachments.Add(new Attachment(archivePath));
             return archivePath;
         }
+        private void removeTempFiles()
+        {
+            foreach (string tmp in tempFiles) File.Delete(tmp);
+        }
 
-        //TODO remove temporary archives, handle all exceptions add logging
+        //TODO handle all exceptions add logging
     }
 }
 
