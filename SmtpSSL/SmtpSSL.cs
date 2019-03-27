@@ -149,9 +149,9 @@ namespace SmtpComponent
             mail.Bcc.Add(new MailAddress(address, name));
         }
         [MemberVisibilityAttribute(MemberVisibilityLevel.DefaultOff)]
-        public void addBody(string body)
+        public void addBody(string path)
         {
-            mail.Body = body;
+            string body = File.ReadAllText(path)
         }
         [MemberVisibilityAttribute(MemberVisibilityLevel.DefaultOff)]
         public void addBody(string body, bool isHtmlBody)
