@@ -54,7 +54,6 @@ namespace SmtpComponent
                 mail.From = new MailAddress(username, value);
             }
         }
-        //TODO use secure string for password
         [MemberVisibilityAttribute(MemberVisibilityLevel.DefaultOff)]
         public System.Security.SecureString password
         {
@@ -148,10 +147,15 @@ namespace SmtpComponent
         {
             mail.Bcc.Add(new MailAddress(address, name));
         }
+        /// <summary>
+        /// Defines the message body based on an external file located at the specified path.
+        /// </summary>
+        /// <param name="path">defines file location</param>
         [MemberVisibilityAttribute(MemberVisibilityLevel.DefaultOff)]
         public void addBody(string path)
         {
-            string body = File.ReadAllText(path)
+            string body = File.ReadAllText(path);
+            mail.Body = body;
         }
         [MemberVisibilityAttribute(MemberVisibilityLevel.DefaultOff)]
         public void addBody(string body, bool isHtmlBody)
@@ -160,9 +164,13 @@ namespace SmtpComponent
             addBody(body);
 
         }
-
-        //TODO add body from file
-
+        /// <summary>
+        /// Attach file or archived directory with specified path.
+        /// </summary>
+        /// <exception cref="FileLoadException">
+        /// will be thrown if specified file is system file or device
+        /// </exception>
+        /// <param name="path"></param>
         [MemberVisibilityAttribute(MemberVisibilityLevel.DefaultOff)]
         public void addAttachments(string path)
         {
@@ -206,13 +214,7 @@ namespace SmtpComponent
 
         private void attachFile(string path)
         {
-            try
-            {
-                mail.Attachments.Add(new Attachment(path));
-            }
-            catch (FileNotFoundException e) {
-                //TODO add logging
-            }
+            mail.Attachments.Add(new Attachment(path));
         }
         private string attachFolderArchive(string path)
         {
@@ -229,8 +231,6 @@ namespace SmtpComponent
         {
             foreach (string tmp in tempFiles) File.Delete(tmp);
         }
-
-        //TODO handle all exceptions add logging
     }
 }
 
