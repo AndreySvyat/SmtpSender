@@ -15,11 +15,6 @@ namespace Test
 
         static void Main(string[] args)
         {
-            SmtpClient cl = new SmtpClient("smtp.gmail.com", 587);
-            cl.EnableSsl = true;
-            cl.Credentials = new NetworkCredential("testcsharpsmtp@gmail.com", "passwordsmtp");
-            cl.Send("testcsharpsmtp@gmail.com", "andrey.svyatogorov@masterdata.ru", "kdfjghalksdjf", "askjdfhlkasjdfj");
-
             SmtpSSL mail = new SmtpSSL();
             mail.enableSsl = true;
             mail.port = 587;
@@ -33,7 +28,6 @@ namespace Test
                     mail.password= new SecureString(pwd,pwdstr.Length);
                 }
             }
-            mail.send("andreysvyatoy@gmail.com", "andrey.svyatogorov@gmail.com", "test", "some text for test message!");
 
             sendfullemail(mail);
             
@@ -42,7 +36,7 @@ namespace Test
 
         static void sendfullemail(SmtpSSL mail)
         {
-            mail.addBody(false, "new mail test");
+            mail.addBody(@"C:\testTemp\formail.htm");
             mail.addTo("andrey.svyatogorov@gmail.com");
             mail.addCC("andreysvyatoy@gmail.com");
             mail.addBcc("andrey.svyatogorov@masterdata.ru");

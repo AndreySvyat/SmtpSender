@@ -141,10 +141,8 @@ namespace SmtpComponent
         public void addBody(bool isHtmlBody, string body)
         {
             mail.IsBodyHtml = isHtmlBody;
-            addBody(body);
-
+            mail.Body = body;
         }
-
         /// <summary>
         /// Defines the message body based on an external file located at the specified path.
         /// </summary>
