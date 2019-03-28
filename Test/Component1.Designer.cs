@@ -1,6 +1,6 @@
-﻿namespace SmtpComponent
+﻿namespace Test
 {
-    partial class MailMessage
+    partial class Component1
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
+
         }
 
         #endregion
