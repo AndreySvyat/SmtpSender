@@ -39,21 +39,10 @@ namespace SmtpComponent
             set
             {
                 creds.UserName = value;
-                mail.From = new MailAddress(value);
             }
         }
         [MemberVisibilityAttribute(MemberVisibilityLevel.DefaultOff)]
-        public string displayName
-        {
-            get
-            {
-                return mail.From.DisplayName;
-            }
-            set
-            {
-                mail.From = new MailAddress(username, value);
-            }
-        }
+        public string displayName { get; set; }
         [MemberVisibilityAttribute(MemberVisibilityLevel.DefaultOff)]
         public System.Security.SecureString password
         {
@@ -107,6 +96,7 @@ namespace SmtpComponent
         public void send()
         {
             smtp.Credentials = creds;
+            mail.From = new MailAddress(username, displayName);
             smtp.Send(mail);
             mail.Dispose();
             removeTempFiles();
@@ -147,6 +137,14 @@ namespace SmtpComponent
         {
             mail.Bcc.Add(new MailAddress(address, name));
         }
+        [MemberVisibilityAttribute(MemberVisibilityLevel.DefaultOff)]
+        public void addBody(bool isHtmlBody, string body)
+        {
+            mail.IsBodyHtml = isHtmlBody;
+            addBody(body);
+
+        }
+
         /// <summary>
         /// Defines the message body based on an external file located at the specified path.
         /// </summary>
@@ -156,13 +154,7 @@ namespace SmtpComponent
         {
             string body = File.ReadAllText(path);
             mail.Body = body;
-        }
-        [MemberVisibilityAttribute(MemberVisibilityLevel.DefaultOff)]
-        public void addBody(string body, bool isHtmlBody)
-        {
-            mail.IsBodyHtml = isHtmlBody;
-            addBody(body);
-
+            mail.IsBodyHtml = true;
         }
         /// <summary>
         /// Attach file or archived directory with specified path.

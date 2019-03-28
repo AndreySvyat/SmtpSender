@@ -42,7 +42,7 @@ namespace Test
 
         static void sendfullemail(SmtpSSL mail)
         {
-            mail.addBody("new mail test");
+            mail.addBody(false, "new mail test");
             mail.addTo("andrey.svyatogorov@gmail.com");
             mail.addCC("andreysvyatoy@gmail.com");
             mail.addBcc("andrey.svyatogorov@masterdata.ru");
