@@ -44,15 +44,15 @@ namespace SmtpComponent
         [MemberVisibilityAttribute(MemberVisibilityLevel.DefaultOff)]
         public string displayName { get; set; }
         [MemberVisibilityAttribute(MemberVisibilityLevel.DefaultOff)]
-        public string password
+        public System.Security.SecureString password
         {
             get
             {
-                return creds.Password;
+                return creds.SecurePassword;
             }
             set
             {
-                creds.Password = value;
+                creds.SecurePassword = value;
             }
         } 
         [MemberVisibilityAttribute(MemberVisibilityLevel.DefaultOff)]
